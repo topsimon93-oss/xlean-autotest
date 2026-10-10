@@ -1,0 +1,33 @@
+const { chromium } = require('playwright-core');
+(async () => {
+  const browser = await chromium.launch({ channel: 'msedge' });
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const errors = [];
+  page.on('pageerror', e => errors.push('pageerror: ' + e.message));
+  page.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
+  const url = 'file:///C:/Users/xlean/WorkBuddy/2026-09-02-13-57-28/AppAutoTest/docs/项目总览.html';
+  await page.goto(url, { waitUntil: 'load' });
+  await page.waitForTimeout(600);
+  const title = await page.title();
+  const h1 = await page.locator('h1').first().innerText().catch(() => '(none)');
+  const navCount = await page.locator('.nav a').count();
+  const sectionCount = await page.locator('section').count();
+  const tableCount = await page.locator('table').count();
+  const preCount = await page.locator('pre').count();
+  // 测试复制按钮
+  await page.locator('.copy').first().click();
+  await page.waitForTimeout(300);
+  const copyText = await page.locator('.copy').first().innerText();
+  await page.screenshot({ path: 'logs/_overview_verify.png', fullPage: true });
+  console.log('=== 验证结果 ===');
+  console.log('标题:', title);
+  console.log('H1:', h1);
+  console.log('导航项:', navCount);
+  console.log('章节数:', sectionCount);
+  console.log('表格数:', tableCount);
+  console.log('代码块数:', preCount);
+  console.log('复制按钮点击后文字:', copyText);
+  console.log('JS 错误数:', errors.length);
+  errors.slice(0, 10).forEach(e => console.log('  ', e));
+  await browser.close();
+})().catch(e => { console.error('FAILED:', e.message); process.exit(1); });
