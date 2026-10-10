@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>xLean 测试控制台</title>
+<style>
+:root{
+  --bg:#0d0f13; --card:#151820; --card2:#1c202b; --line:#262b36;
+  --txt:#e8eaef; --sub:#9aa3b2; --dim:#626b7a;
+  --ok:#22c55e; --bad:#ef4444; --warn:#f59e0b; --info:#3b82f6;
+}
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;margin:0;background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:36px 22px 70px}
+.head{text-align:center;margin-bottom:30px}
+.head .logo{width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#3b82f6,#7c5cff);display:inline-flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:26px;margin-bottom:14px}
+.head h1{font-size:24px;margin:0;letter-spacing:.5px}
+.head p{color:var(--sub);margin:8px 0 0;font-size:14px}
+
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.step .num{width:34px;height:34px;border-radius:50%;background:var(--card2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:var(--sub);flex:none}
+.step .body{flex:1;min-width:0}
+.step .body .t{font-size:15px;font-weight:700}
+.step .body .d{font-size:12.5px;color:var(--sub);margin-top:3px;line-height:1.5}
+.step .status{flex:none;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;border:1px solid var(--line);color:var(--dim);min-width:64px;text-align:center}
+.step .status.ok{color:var(--ok);border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.08)}
+.step .status.bad{color:var(--bad);border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.08)}
+.step .status.wait{color:var(--warn);border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.08)}
+
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:22px}
+@media(max-width:640px){.actions{grid-template-columns:1fr}}
+.btn{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;cursor:pointer;text-decoration:none;color:var(--txt);transition:.15s;text-align:left}
+.btn:hover{border-color:var(--info);transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn .ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
+.btn .bt{font-size:15px;font-weight:700}
+.btn .bd{font-size:12px;color:var(--sub);margin-top:3px;line-height:1.5}
+.btn .primary{background:linear-gradient(135deg,#3b82f6,#7c5cff);border:none}
+.btn.primary:hover{border-color:transparent;box-shadow:0 6px 22px rgba(59,130,246,.3)}
+.ic.blue{background:rgba(59,130,246,.15)} .ic.green{background:rgba(34,197,94,.15)} .ic.amber{background:rgba(245,158,11,.15)} .ic.gray{background:rgba(100,116,139,.15)}
+
+.hint{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:13px;color:var(--sub);line-height:1.7}
+.hint b{color:var(--txt)}
+.footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div class="logo">XL</div>
+    <h1>xLean 测试控制台</h1>
+    <p>不用记命令，点按钮就行</p>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="num">1</div>
+      <div class="body">
+        <div class="t">连接手机</div>
+        <div class="d">USB 线插电脑，手机弹「允许 USB 调试」点「始终允许」</div>
+      </div>
+      <div class="status" id="st-dev">检测中…</div>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <div class="body">
+        <div class="t">Appium 服务</div>
+        <div class="d">测试引擎，需保持运行（下面有启动按钮）</div>
+      </div>
+      <div class="status" id="st-appium">检测中…</div>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <div class="body">
+        <div class="t">跑测试</div>
+        <div class="d">13 条用例，约 12-20 分钟，手机屏幕会自动操作</div>
+      </div>
+      <div class="status" id="st-run">待开始</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <a class="btn primary" href="一键测试xLean.bat">
+      <div class="ic" style="background:rgba(255,255,255,.2)">🚀</div>
+      <div><div class="bt">一键测试 xLean</div><div class="bd">自动检查设备+服务，跑完自动开报告（推荐）</div></div>
+    </a>
+    <a class="btn" href="scripts/start_appium.bat">
+      <div class="ic blue">⚙️</div>
+      <div><div class="bt">启动 Appium 服务</div><div class="bd">单独开/重启测试引擎（一般不用手动点）</div></div>
+    </a>
+    <a class="btn" href="reports/pipeline/pipeline_report.html">
+      <div class="ic green">📄</div>
+      <div><div class="bt">打开最近一次报告</div><div class="bd">每条用例结果 + 失败截图</div></div>
+    </a>
+    <a class="btn" href="reports/pipeline/trend.html">
+      <div class="ic amber">📈</div>
+      <div><div class="bt">打开历史趋势</div><div class="bd">通过率 / 稳定性 / 缺陷清单</div></div>
+    </a>
+  </div>
+
+  <div class="hint">
+    <b>怎么用：</b>先点第 1 步把手机连好（看到绿色「已连接」），再点 <b>「一键测试 xLean」</b>。
+    跑的时候手机屏幕会自己动、别碰它。跑完自动弹出报告。<br>
+    <b>判断结果：</b>报告顶部显示 <span style="color:var(--ok)">PASS · 回归通过</span> 就是全绿；
+    显示 <span style="color:var(--bad)">FAIL</span> 就看下面的「缺陷清单」定位是哪条挂了。
+  </div>
+
+  <div class="footer">xLean Appium 自动化测试 · 控制台</div>
+</div>
+
+<script>
+// 检测设备
+async function checkDev(){
+  const el = document.getElementById('st-dev');
+  try{
+    const r = await fetch('http://127.0.0.1:5037/devices', {mode:'no-cors'});
+    // no-cors 拿不到内容，改用轮询 adb 不可行，这里退回提示
+    el.textContent = '已连接(需adb)';
+    el.className = 'status wait';
+  }catch(e){
+    el.textContent = '未检测';
+    el.className = 'status wait';
+  }
+}
+// 检测 Appium
+async function checkAppium(){
+  const el = document.getElementById('st-appium');
+  try{
+    const ctl = new AbortController();
+    const t = setTimeout(()=>ctl.abort(), 2500);
+    const r = await fetch('http://127.0.0.1:4723/status', {signal:ctl.signal});
+    clearTimeout(t);
+    if(r.ok){ el.textContent='运行中'; el.className='status ok'; }
+    else { el.textContent='未运行'; el.className='status bad'; }
+  }catch(e){
+    el.textContent='未运行'; el.className='status bad';
+  }
+}
+checkAppium();
+checkDev();
+// 每 8 秒刷新一次服务状态
+setInterval(checkAppium, 8000);
+</script>
+</body>
+</html>

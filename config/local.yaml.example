@@ -1,0 +1,15 @@
+# =====================================================================
+# 本地私有配置模板: 复制本文件为 config/local.yaml 后修改(不会提交 git)
+# local.yaml 的内容会"深合并"覆盖 global.yaml 的同名键。
+# =====================================================================
+
+# 例: 固定自己的模拟器与真实被测 App
+# android:
+#   udid: emulator-5554
+#   app_package: com.your.company.app
+#   app_activity: .ui.MainActivity
+
+# 例: iOS 真机
+# ios:
+#   udid: 00008110-001DXXXXXXXX
+#   bundle_id: com.your.company.app

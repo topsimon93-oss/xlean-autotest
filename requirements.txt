@@ -1,0 +1,7 @@
+# ===== AppAutoTest 依赖 (Python 3.9+) =====
+appium-python-client>=3.1.0
+selenium>=4.24
+pytest>=8.2
+pytest-xdist>=3.6        # 并行(可选)
+allure-pytest>=2.13.5
+PyYAML>=6.0.2

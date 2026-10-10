@@ -1,0 +1,36 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# ===== 测试产物 =====
+allure-results/
+allure-results_bak*/
+reports/
+logs/
+screenshots/
+
+# ===== 调试产物(UI dump / 截图 / 临时日志) =====
+*.xml
+*.png
+*.jpg
+_pipeline*.log
+_console_server.log
+
+# ===== 本地私有配置(设备/App 信息, 不提交) =====
+config/local.yaml
+
+# ===== 待测 App 安装包(体积大, 不入库) =====
+apps/*.apk
+apps/*.ipa
+apps/*.app
+
+# ===== IDE =====
+.idea/
+.vscode/
+*.swp
+
+# ===== WorkBuddy 项目数据(本地, 不入库) =====
+.workbuddy/

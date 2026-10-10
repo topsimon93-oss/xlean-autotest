@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>xLean 测试控制台</title>
+<style>
+:root{--bg:#0d0f13;--card:#151820;--card2:#1c202b;--line:#262b36;--txt:#e8eaef;--sub:#9aa3b2;--dim:#626b7a;--ok:#22c55e;--bad:#ef4444;--warn:#f59e0b;--info:#3b82f6}
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;margin:0;background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:34px 22px 60px}
+.head{text-align:center;margin-bottom:26px}
+.head .logo{width:58px;height:58px;border-radius:16px;background:linear-gradient(135deg,#3b82f6,#7c5cff);display:inline-flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:25px;margin-bottom:12px}
+.head h1{font-size:23px;margin:0}
+.head p{color:var(--sub);margin:7px 0 0;font-size:13.5px}
+.steps{display:flex;flex-direction:column;gap:11px;margin-bottom:20px}
+.step{display:flex;align-items:center;gap:15px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px 19px}
+.step .num{width:32px;height:32px;border-radius:50%;background:var(--card2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--sub);flex:none}
+.step .body{flex:1}
+.step .t{font-size:14.5px;font-weight:700}
+.step .d{font-size:12px;color:var(--sub);margin-top:3px}
+.status{flex:none;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;border:1px solid var(--line);color:var(--dim);min-width:66px;text-align:center}
+.status.ok{color:var(--ok);border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.08)}
+.status.bad{color:var(--bad);border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.08)}
+.status.wait{color:var(--warn);border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.08)}
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:640px){.actions{grid-template-columns:1fr}}
+.btn{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:19px;cursor:pointer;color:var(--txt);transition:.15s;text-align:left;font-family:inherit}
+.btn:hover{border-color:var(--info);transform:translateY(-2px)}
+.btn:disabled{opacity:.45;cursor:wait;transform:none}
+.btn .ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;flex:none}
+.btn .bt{font-size:14.5px;font-weight:700}
+.btn .bd{font-size:11.5px;color:var(--sub);margin-top:3px}
+.btn.primary{background:linear-gradient(135deg,#3b82f6,#7c5cff);border:none}
+.btn.primary:hover{box-shadow:0 6px 22px rgba(59,130,246,.3)}
+.ic.blue{background:rgba(59,130,246,.15)}.ic.green{background:rgba(34,197,94,.15)}.ic.amber{background:rgba(245,158,11,.15)}.ic.white{background:rgba(255,255,255,.18)}
+.toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:11px 20px;font-size:13px;display:none;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.toast.show{display:block}
+.hint{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 19px;font-size:12.5px;color:var(--sub);line-height:1.75}
+.hint b{color:var(--txt)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="logo">XL</div>
+    <h1>xLean 测试控制台</h1>
+    <p>点按钮真的会执行 · 状态灯自动刷新</p>
+  </div>
+
+  <div class="steps">
+    <div class="step"><div class="num">1</div>
+      <div class="body"><div class="t">连接手机</div><div class="d">USB 线插电脑，手机弹「允许 USB 调试」点「始终允许」</div></div>
+      <div class="status wait" id="st-dev">检测中…</div></div>
+    <div class="step"><div class="num">2</div>
+      <div class="body"><div class="t">Appium 服务</div><div class="d">测试引擎，未运行时点下面按钮启动</div></div>
+      <div class="status wait" id="st-appium">检测中…</div></div>
+    <div class="step"><div class="num">3</div>
+      <div class="body"><div class="t">跑测试</div><div class="d">13 条用例约 12-20 分钟，期间别碰手机</div></div>
+      <div class="status" id="st-run">待开始</div></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" id="b-run">
+      <div class="ic white">🚀</div>
+      <div><div class="bt">一键测试 xLean</div><div class="bd">弹出测试窗口，自动跑完并开报告</div></div>
+    </button>
+    <button class="btn" id="b-appium">
+      <div class="ic blue">⚙️</div>
+      <div><div class="bt">启动 Appium 服务</div><div class="bd">状态灯红着才需要点</div></div>
+    </button>
+    <button class="btn" id="b-report">
+      <div class="ic green">📄</div>
+      <div><div class="bt">打开最近一次报告</div><div class="bd">每条用例结果 + 失败截图</div></div>
+    </button>
+    <button class="btn" id="b-trend">
+      <div class="ic amber">📈</div>
+      <div><div class="bt">打开历史趋势</div><div class="bd">通过率 / 稳定性 / 缺陷清单</div></div>
+    </button>
+  </div>
+
+  <div class="hint">
+    <b>用法：</b>第 1、2 步绿灯后 → 点「一键测试 xLean」→ 会弹出黑色测试窗口，手机屏幕自动操作，跑完自动弹报告。<br>
+    <b>判断：</b>报告顶部 <b style="color:var(--ok)">PASS</b> = 全绿；<b style="color:var(--bad)">FAIL</b> = 看缺陷清单定位。
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+function toast(msg, ms=3200){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._tm); t._tm=setTimeout(()=>t.classList.remove('show'), ms); }
+async function api(path){ const r = await fetch(path); return r.json(); }
+
+async function refresh(){
+  try{
+    const s = await api('/api/status');
+    const d = $('st-dev');
+    if(s.dev_ok){ d.textContent='已连接'; d.className='status ok'; }
+    else { d.textContent='未连接'; d.className='status bad'; }
+    const a = $('st-appium');
+    if(s.appium_ok){ a.textContent='运行中'; a.className='status ok'; }
+    else { a.textContent='未运行'; a.className='status bad'; }
+  }catch(e){ $('st-dev').textContent='服务断开'; $('st-appium').textContent='服务断开'; }
+}
+
+$('b-run').onclick = async () => {
+  const b = $('b-run'); b.disabled = true;
+  $('st-run').textContent = '进行中'; $('st-run').className = 'status wait';
+  try{ const r = await api('/api/run'); toast(r.msg || (r.ok?'已启动':'启动失败')); }
+  catch(e){ toast('请求失败：控制台服务没在跑？'); }
+  setTimeout(()=>b.disabled=false, 1500);
+};
+$('b-appium').onclick = async () => {
+  const b = $('b-appium'); b.disabled = true;
+  try{ const r = await api('/api/appium'); toast(r.msg + '，几秒后状态灯会变绿'); }
+  catch(e){ toast('请求失败'); }
+  setTimeout(()=>{ b.disabled=false; refresh(); }, 2500);
+};
+$('b-report').onclick = async () => { const r = await api('/api/open?t=report'); if(!r.ok) toast(r.msg||'打开失败'); };
+$('b-trend').onclick = async () => { const r = await api('/api/open?t=trend'); if(!r.ok) toast(r.msg||'打开失败'); };
+
+refresh();
+setInterval(refresh, 6000);
+</script>
+</body>
+</html>

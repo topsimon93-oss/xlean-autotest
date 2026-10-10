@@ -1,0 +1,64 @@
+# =====================================================================
+# AppAutoTest 全局配置
+# ---------------------------------------------------------------------
+# 使用约定:
+#   1. 个人/设备/被测 App 的私有信息请写到 config/local.yaml(不入 git),
+#      框架会把它"深合并"到本文件之上, local 的值优先生效。
+#   2. 命令行参数 --platform/--app/--udid/--appium-server 优先级最高。
+# =====================================================================
+
+appium:
+  server_url: http://127.0.0.1:4723   # Appium Server 地址
+  command_timeout_ms: 300000          # newCommandTimeout, 空闲超时自动断开会话(毫秒)
+
+# ---------------- 等待策略(秒) ----------------
+wait:
+  implicit: 10        # 隐式等待
+  explicit: 20        # 显式等待 WebDriverWait 默认值
+  poll_frequency: 0.5 # 轮询间隔
+  launch_settle: 3    # App 启动后等待首屏稳定的时长(通用冒烟用)
+
+# ---------------- 报告与产物目录 ----------------
+report:
+  allure_results_dir: allure-results
+  screenshots_dir: screenshots
+  dumps_dir: reports/dumps     # UI 层级 dump(xml)输出目录, 供 AI/人工分析
+
+# ---------------- App 存放目录 ----------------
+app_paths:
+  apk_dir: apps   # Android 自动扫描: *.apk
+  ipa_dir: apps   # iOS 自动扫描: *.ipa / *.app
+
+# =====================================================================
+# Android
+# =====================================================================
+android:
+  automation_name: UiAutomator2
+  device_name: Android
+  udid: null                 # 留空: 自动探测 adb devices 中的第一个设备
+  platform_version: null     # 留空自动探测; 也可写死如 "14"
+  # 未传 --app 时, 直接启动设备上已安装的 App(默认: 系统"设置", 所有镜像都自带;
+  # 想默认跑自己 App 就把这里改成你的包名/Activity, 或写到 config/local.yaml)
+  app_package: com.android.settings
+  app_activity: .Settings
+  no_reset: true
+  auto_grant_permissions: true   # 自动允许运行时权限, 减少弹窗干扰
+  unicode_keyboard: true         # 中文输入支持
+  reset_keyboard: true
+  extra_capabilities: {}         # 追加任意官方 capability
+
+# =====================================================================
+# iOS (注意: 需要 macOS + Xcode, Windows 上无法执行 iOS 会话)
+# =====================================================================
+ios:
+  automation_name: XCUITest
+  device_name: iPhone
+  udid: null                 # 真机: 填设备 UUID; 模拟器: 留空自动选择已启动模拟器
+  platform_version: null
+  # 未传 --app 时按 bundleId 启动已安装 App(演示默认: 系统"设置")
+  bundle_id: com.apple.Preferences
+  no_reset: true
+  wda_local_port: 8100       # WebDriverAgent 本地端口
+  use_prebuilt_wda: false
+  auto_accept_alerts: true   # 自动接受系统弹窗
+  extra_capabilities: {}
