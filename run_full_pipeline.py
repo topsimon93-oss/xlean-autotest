@@ -565,10 +565,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",s
 .wrap{max-width:1240px;margin:0 auto;padding:26px 22px 60px}
 
 /* 结论横幅 */
-.verdict{display:flex;align-items:center;gap:18px;padding:22px 26px;border-radius:14px;border:1px solid var(--line);background:linear-gradient(135deg,var(--card),var(--card2));margin-bottom:16px}
-.verdict .light{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;flex:none;box-shadow:0 0 0 6px rgba(0,0,0,.2)}
-.verdict .light.pass{background:rgba(34,197,94,.15);color:var(--ok)}
-.verdict .light.fail{background:rgba(239,68,68,.15);color:var(--bad)}
+.verdict{display:flex;align-items:center;gap:18px;padding:22px 26px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(135deg,var(--card),var(--card2));margin-bottom:16px;position:relative;overflow:hidden}
+.verdict::before{content:'';position:absolute;inset:0;background:radial-gradient(600px 120px at 8% 0%,rgba(34,197,94,.08),transparent 60%);pointer-events:none}
+.verdict.fail::before{background:radial-gradient(600px 120px at 8% 0%,rgba(239,68,68,.08),transparent 60%)}
+.verdict .light{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:27px;flex:none;box-shadow:0 0 0 6px rgba(0,0,0,.2)}
+.verdict .light.pass{background:rgba(34,197,94,.15);color:var(--ok);animation:pulse-ok 2.4s ease-in-out infinite}
+.verdict .light.fail{background:rgba(239,68,68,.15);color:var(--bad);animation:pulse-bad 1.6s ease-in-out infinite}
+@keyframes pulse-ok{0%,100%{box-shadow:0 0 0 6px rgba(0,0,0,.2),0 0 0 0 rgba(34,197,94,.35)}50%{box-shadow:0 0 0 6px rgba(0,0,0,.2),0 0 0 14px rgba(34,197,94,0)}}
+@keyframes pulse-bad{0%,100%{box-shadow:0 0 0 6px rgba(0,0,0,.2),0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 6px rgba(0,0,0,.2),0 0 0 14px rgba(239,68,68,0)}}
 .verdict h1{margin:0;font-size:20px;letter-spacing:.3px}
 .verdict .vsub{margin-top:5px;color:var(--sub);font-size:13px;line-height:1.6}
 .verdict .meta{margin-left:auto;text-align:right;font-size:12px;color:var(--dim);line-height:1.7;flex:none}
@@ -578,8 +582,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",s
 .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
 @media(max-width:1000px){.kpis{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}}
-.kpi{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:15px;position:relative;overflow:hidden}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:15px;position:relative;overflow:hidden;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.kpi:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--ac,#3b82f6) 55%,var(--line));box-shadow:0 8px 24px rgba(0,0,0,.35)}
 .kpi::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ac,#3b82f6)}
+.kpi .ic{position:absolute;right:12px;top:12px;font-size:17px;opacity:.5;filter:grayscale(.15)}
 .kpi .v{font-size:25px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.5px}
 .kpi .v small{font-size:13px;font-weight:600;color:var(--sub)}
 .kpi .t{font-size:12px;color:var(--sub);margin-top:9px}
@@ -592,8 +598,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",s
 .g2{grid-template-columns:1fr 1fr}
 .g32{grid-template-columns:1.6fr 1fr}
 @media(max-width:900px){.g2,.g32{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:18px;transition:border-color .18s ease,box-shadow .18s ease}
+.card:hover{border-color:#303748;box-shadow:0 6px 22px rgba(0,0,0,.28)}
 .card h2{margin:0 0 2px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card h2 .hico{font-size:15px;opacity:.85}
 .card h2 .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;background:var(--card2);border:1px solid var(--line);color:var(--sub)}
 .card .meta{color:var(--dim);font-size:12px;margin-bottom:14px;line-height:1.5}
 canvas{max-height:280px}
@@ -650,23 +658,23 @@ tr:hover td{background:#191d26}
 <div id="defects-section"></div>
 
 <div class="grid g2">
-  <div class="card"><h2>通过率趋势</h2><div class="meta">每次运行通过率，虚线为历史均值基线</div><canvas id="c-rate"></canvas></div>
-  <div class="card"><h2>总耗时趋势</h2><div class="meta">每次运行累计耗时（秒），红色=有失败</div><canvas id="c-time"></canvas></div>
+  <div class="card"><h2><span class="hico">📈</span>通过率趋势</h2><div class="meta">每次运行通过率，虚线为历史均值基线</div><canvas id="c-rate"></canvas></div>
+  <div class="card"><h2><span class="hico">⏱️</span>总耗时趋势</h2><div class="meta">每次运行累计耗时（秒），红色=有失败</div><canvas id="c-time"></canvas></div>
 </div>
 
 <div class="grid g32">
-  <div class="card"><h2>用例稳定率矩阵 <span class="badge" id="flaky-count"></span></h2><div class="meta">每行一个用例，色块=历次运行结果，点任一行看下方走势；标黄=不稳定(Flaky)</div><div id="matrix"></div></div>
-  <div class="card"><h2>最慢用例 TOP5</h2><div class="meta">按历史平均耗时排序，超过 SLA 阈值标红</div><canvas id="c-slow"></canvas></div>
+  <div class="card"><h2><span class="hico">🎯</span>用例稳定率矩阵 <span class="badge" id="flaky-count"></span></h2><div class="meta">每行一个用例，色块=历次运行结果，点任一行看下方走势；标黄=不稳定(Flaky)</div><div id="matrix"></div></div>
+  <div class="card"><h2><span class="hico">🐌</span>最慢用例 TOP5</h2><div class="meta">按历史平均耗时排序，超过 SLA 阈值标红</div><canvas id="c-slow"></canvas></div>
 </div>
 
 <div class="grid g2">
-  <div class="card"><h2>失败热点</h2><div class="meta">各用例累计失败次数（FAIL + ERROR）</div><canvas id="c-fail"></canvas></div>
-  <div class="card"><h2>单用例耗时走势</h2><div class="meta" id="case-meta">点击上方矩阵或下方明细的用例名查看</div><canvas id="c-case"></canvas></div>
+  <div class="card"><h2><span class="hico">🔥</span>失败热点</h2><div class="meta">各用例累计失败次数（FAIL + ERROR）</div><canvas id="c-fail"></canvas></div>
+  <div class="card"><h2><span class="hico">📉</span>单用例耗时走势</h2><div class="meta" id="case-meta">点击上方矩阵或下方明细的用例名查看</div><canvas id="c-case"></canvas></div>
 </div>
 
 <div class="card">
   <div class="toolbar">
-    <h2 style="margin:0">历史运行明细</h2>
+    <h2 style="margin:0"><span class="hico">📋</span>历史运行明细</h2>
     <span class="pill on" data-f="all">全部</span>
     <span class="pill" data-f="fail">失败过的</span>
     <input class="search" id="q" placeholder="搜索用例&#8230;">
@@ -716,7 +724,7 @@ function verdict(){
   const ok = last.failed===0;
   const el = cnv('verdict');
   const light = ok? 'pass':'fail';
-  const ico = ok? '✓':'✕';
+  const ico = ok? '✔':'✖';
   let msg;
   if(ok) msg = '本轮回归 <b>全部 '+last.passed+' 条用例通过</b>，质量可发布。';
   else msg = '本轮 <b>'+last.failed+' 条用例失败</b>，需定位并修复后复测。';
@@ -758,8 +766,8 @@ function kpis(){
   const prevTime = H.length>=2? H[H.length-2].elapsed : avgTime;
   const timeDelta = H.length>=2? last.elapsed-prevTime : 0;
 
-  const k = (v,small,t,d,ac,trendHtml)=>
-    '<div class="kpi" style="--ac:'+ac+'"><div class="v">'+v+(small?'<small> '+small+'</small>':'')+'</div><div class="t">'+t+'</div><div class="d">'+d+'</div>'+(trendHtml||'')+'</div>';
+  const k = (v,small,t,d,ac,trendHtml,ic)=>
+    '<div class="kpi" style="--ac:'+ac+'">'+(ic?'<span class="ic">'+ic+'</span>':'')+'<div class="v">'+v+(small?'<small> '+small+'</small>':'')+'</div><div class="t">'+t+'</div><div class="d">'+d+'</div>'+(trendHtml||'')+'</div>';
   const trend = (delta, goodWhenDown) => {
     if(delta===0) return '<div class="trend flat">— 持平</div>';
     const good = goodWhenDown? delta<0 : delta>0;
@@ -768,12 +776,12 @@ function kpis(){
     return '<div class="trend '+cls+'">'+arrow+' '+Math.abs(delta).toFixed(1)+' '+ (goodWhenDown?'':'%') +'</div>';
   };
   cnv('kpis').innerHTML =
-    k(H.length,'','运行次数','累计 '+H.length+' 次回归',C.info,'')+
-    k(last.passed,'/'+last.total,'最近一次结果',last.ts.slice(0,16), last.failed? C.bad:C.ok,'')+
-    k((rate*100).toFixed(1),'%','累计通过率',passed+' / '+total, C.ok, trend(rateDelta*100,false))+
-    k((fpr*100).toFixed(0),'%','首次通过率',names.length+' 用例首次即过', C.info,'')+
-    k(flakyNames.length,'','不稳定用例',flakyNames.length? '需关注：'+flakyNames.slice(0,2).map(title).join('、')+(flakyNames.length>2?'…':''):'全部稳定', flakyNames.length?C.warn:C.ok,'')+
-    k(_fmt(last.elapsed),'','本次耗时', '最快 '+_fmt(best)+' / 最慢 '+_fmt(worst), last.elapsed>SLA_TOTAL?C.bad:C.info, trend(timeDelta,true));
+    k(H.length,'','运行次数','累计 '+H.length+' 次回归',C.info,'','🔄')+
+    k(last.passed,'/'+last.total,'最近一次结果',last.ts.slice(0,16), last.failed? C.bad:C.ok,'', last.failed?'⚠️':'✅')+
+    k((rate*100).toFixed(1),'%','累计通过率',passed+' / '+total, C.ok, trend(rateDelta*100,false),'📊')+
+    k((fpr*100).toFixed(0),'%','首次通过率',names.length+' 用例首次即过', C.info,'','🚀')+
+    k(flakyNames.length,'','不稳定用例',flakyNames.length? '需关注：'+flakyNames.slice(0,2).map(title).join('、')+(flakyNames.length>2?'…':''):'全部稳定', flakyNames.length?C.warn:C.ok,'', flakyNames.length?'🌀':'🛡️')+
+    k(_fmt(last.elapsed),'','本次耗时', '最快 '+_fmt(best)+' / 最慢 '+_fmt(worst), last.elapsed>SLA_TOTAL?C.bad:C.info, trend(timeDelta,true),'⏱️');
 }
 function _fmt(s){ s=Math.round(s); if(s<60)return s+'s'; return Math.floor(s/60)+'m'+(s%60)+'s'; }
 
@@ -797,7 +805,7 @@ function defects(){
   });
   const sec = cnv('defects-section');
   if(!defs.length){ sec.innerHTML=''; return; }
-  sec.innerHTML = '<div class="card" style="margin-bottom:14px"><h2>缺陷清单 <span class="badge">'+defs.length+' 个</span></h2><div class="meta">当前仍未通过、需要修复或排查的用例</div>'+
+  sec.innerHTML = '<div class="card" style="margin-bottom:14px"><h2><span class="hico">🐛</span>缺陷清单 <span class="badge">'+defs.length+' 个</span></h2><div class="meta">当前仍未通过、需要修复或排查的用例</div>'+
     defs.map(d=>{
       const desc = d.lastStatus==='ERROR'
         ? '执行期间抛异常（定位器失效 / 环境异常），非断言失败，需先确认环境与元素定位。'
@@ -810,6 +818,11 @@ function defects(){
     }).join('')+'</div>';
 }
 
+/* 通用图表外观 */
+const TIP = {backgroundColor:'rgba(21,24,32,.95)',borderColor:'#262b36',borderWidth:1,titleColor:'#e8eaef',bodyColor:'#9aa3b2',padding:10,cornerRadius:8,displayColors:false};
+const GRID = {color:'rgba(38,43,54,.6)'};
+const grad = (ctx,area,rgb)=>{ const g=ctx.createLinearGradient(0,area.top,0,area.bottom); g.addColorStop(0,`rgba(${rgb},.32)`); g.addColorStop(1,`rgba(${rgb},.02)`); return g; };
+
 /* 通过率趋势（带基线） */
 function drawRate(){
   destroy('rate');
@@ -820,10 +833,10 @@ function drawRate(){
     type:'line',
     data:{labels,
       datasets:[
-        {label:'通过率 %',data,borderColor:C.info,backgroundColor:'rgba(59,130,246,.15)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:H.map(r=>r.failed?C.bad:C.ok),pointBorderColor:'#fff',pointBorderWidth:1},
+        {label:'通过率 %',data,borderColor:C.info,borderWidth:2.5,backgroundColor:c=>{const {ctx,chartArea}=c.chart; return chartArea?grad(ctx,chartArea,'59,130,246'):'rgba(59,130,246,.15)';},fill:true,tension:.35,pointRadius:4,pointHoverRadius:7,pointBackgroundColor:H.map(r=>r.failed?C.bad:C.ok),pointBorderColor:'#0d0f13',pointBorderWidth:2},
         {label:'基线均值',data:H.map(()=>+avg.toFixed(1)),borderColor:'#64748b',borderDash:[6,5],borderWidth:1.5,pointRadius:0,fill:false}
       ]},
-    options:{plugins:{legend:{display:true,labels:{color:'#9aa3b2',boxWidth:12,boxHeight:12,font:{size:11}}}},scales:{x:{ticks:{color:'#626b7a'}},y:{min:0,max:100,ticks:{color:'#626b7a',callback:v=>v+'%'},grid:{color:'#1b1e27'}}}}
+    options:{plugins:{legend:{display:true,labels:{color:'#9aa3b2',boxWidth:12,boxHeight:12,font:{size:11}}},tooltip:TIP},scales:{x:{ticks:{color:'#626b7a'},grid:{display:false}},y:{min:0,max:100,ticks:{color:'#626b7a',callback:v=>v+'%'},grid:GRID}}}
   });
 }
 
@@ -834,7 +847,7 @@ function drawTime(){
     type:'bar',
     data:{labels:H.map(r=>lbl(r)),
       datasets:[{label:'总耗时(s)',data:H.map(r=>r.elapsed),backgroundColor:H.map(r=>r.elapsed>SLA_TOTAL?C.bad:(r.failed?C.warn:C.info)),borderRadius:4}]},
-    options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#626b7a'}},y:{ticks:{color:'#626b7a'},grid:{color:'#1b1e27'}}}}
+    options:{plugins:{legend:{display:false},tooltip:TIP},scales:{x:{ticks:{color:'#626b7a'}},y:{ticks:{color:'#626b7a'},grid:GRID}}}
   });
 }
 
@@ -846,7 +859,7 @@ function drawFail(){
   charts.fail = new Chart(cnv('c-fail'), {
     type:'bar',
     data:{labels:names.map(title),datasets:[{label:'累计失败',data:fails,backgroundColor:fails.map(f=>f>0?C.bad:'#334155'),borderRadius:3}]},
-    options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#626b7a'},grid:{color:'#1b1e27'}},y:{ticks:{color:'#9aa3b2',font:{size:10}}}}}
+    options:{indexAxis:'y',plugins:{legend:{display:false},tooltip:TIP},scales:{x:{ticks:{color:'#626b7a'},grid:GRID},y:{ticks:{color:'#9aa3b2',font:{size:10}}}}}
   });
 }
 
@@ -858,7 +871,7 @@ function drawSlow(){
   charts.slow = new Chart(cnv('c-slow'), {
     type:'bar',
     data:{labels:avg.map(x=>title(x.n)),datasets:[{label:'平均耗时(s)',data:avg.map(x=>+x.t.toFixed(1)),backgroundColor:avg.map(x=>x.t>SLA_CASE?C.bad:C.warn),borderRadius:4}]},
-    options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#626b7a'}},y:{ticks:{color:'#626b7a'},grid:{color:'#1b1e27'}}}}
+    options:{plugins:{legend:{display:false},tooltip:TIP},scales:{x:{ticks:{color:'#626b7a'}},y:{ticks:{color:'#626b7a'},grid:GRID}}}
   });
 }
 
@@ -873,7 +886,7 @@ function drawCase(){
   charts.case = new Chart(cnv('c-case'), {
     type:'bar',
     data:{labels:H.map((r,i)=>lbl(r)),datasets:[{label:title(selectedCase)+' 耗时(s)',data,backgroundColor:cols,borderRadius:4}]},
-    options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#626b7a'}},y:{ticks:{color:'#626b7a'},grid:{color:'#1b1e27'}}}}
+    options:{plugins:{legend:{display:false},tooltip:TIP},scales:{x:{ticks:{color:'#626b7a'}},y:{ticks:{color:'#626b7a'},grid:GRID}}}
   });
 }
 
