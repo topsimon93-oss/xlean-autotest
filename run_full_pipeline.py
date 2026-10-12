@@ -586,11 +586,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",s
 .kpi:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--ac,#3b82f6) 55%,var(--line));box-shadow:0 8px 24px rgba(0,0,0,.35)}
 .kpi::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ac,#3b82f6)}
 .kpi .ic{position:absolute;right:12px;top:12px;font-size:17px;opacity:.5;filter:grayscale(.15)}
-.kpi .v{font-size:25px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.5px}
+.kpi .v{font-size:25px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.5px;font-feature-settings:"tnum"}
 .kpi .v small{font-size:13px;font-weight:600;color:var(--sub)}
-.kpi .t{font-size:12px;color:var(--sub);margin-top:9px}
-.kpi .d{font-size:11px;color:var(--dim);margin-top:3px}
-.kpi .trend{font-size:11px;margin-top:6px;font-weight:600}
+.kpi .t{font-size:12px;color:var(--sub);margin-top:10px}
+.kpi .d{font-size:11px;color:var(--dim);margin-top:4px;min-height:16px;line-height:1.4}
+.kpi .trend{font-size:11px;margin-top:7px;font-weight:600;font-variant-numeric:tabular-nums}
 .up{color:var(--ok)} .down{color:var(--bad)} .flat{color:var(--dim)}
 
 /* 通用卡片 */
@@ -600,16 +600,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",s
 @media(max-width:900px){.g2,.g32{grid-template-columns:1fr}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:18px;transition:border-color .18s ease,box-shadow .18s ease}
 .card:hover{border-color:#303748;box-shadow:0 6px 22px rgba(0,0,0,.28)}
-.card h2{margin:0 0 2px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
-.card h2 .hico{font-size:15px;opacity:.85}
-.card h2 .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;background:var(--card2);border:1px solid var(--line);color:var(--sub)}
-.card .meta{color:var(--dim);font-size:12px;margin-bottom:14px;line-height:1.5}
+.card h2{margin:0 0 2px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;line-height:1.3}
+.card h2 .hico{font-size:15px;opacity:.85;flex:none;width:18px;text-align:center}
+.card h2 .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;background:var(--card2);border:1px solid var(--line);color:var(--sub);margin-left:auto}
+.card .meta{color:var(--dim);font-size:12px;margin-bottom:14px;line-height:1.55}
 canvas{max-height:280px}
 
 /* 缺陷清单 */
 .defect{border:1px solid rgba(239,68,68,.35);border-left:3px solid var(--bad);border-radius:10px;padding:13px 15px;margin-bottom:10px;background:rgba(239,68,68,.04)}
 .defect .df-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:7px}
-.defect .df-name{font-weight:700;font-size:13.5px}
+.defect .df-idx{flex:none;width:20px;height:20px;border-radius:5px;background:rgba(239,68,68,.15);color:var(--bad);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.defect .df-name{font-weight:700;font-size:13.5px;font-variant-numeric:tabular-nums}
+.defect .df-stats{margin-left:auto;font-size:11px;color:var(--dim);white-space:nowrap}
 .defect .tag{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid}
 .tag.reg{color:#fca5a5;border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.12)}
 .tag.flaky{color:#fbbf24;border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.12)}
@@ -620,8 +622,10 @@ canvas{max-height:280px}
 
 /* 稳定率矩阵 */
 .matrix-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
-.matrix-tbl th{text-align:left;color:var(--dim);font-weight:600;padding:8px 8px;border-bottom:1px solid var(--line);font-size:11px;white-space:nowrap}
+.matrix-tbl th{text-align:left;color:var(--dim);font-weight:600;padding:8px 8px;border-bottom:1px solid var(--line);font-size:11px;white-space:nowrap;letter-spacing:.3px;text-transform:uppercase}
+.matrix-tbl th:last-child{text-align:right}
 .matrix-tbl td{padding:8px;border-bottom:1px solid #1b1e27;vertical-align:middle}
+.matrix-tbl td:last-child{text-align:right;white-space:nowrap}
 .matrix-tbl tr:hover td{background:#191d26}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:middle}
 .cell{display:inline-block;width:16px;height:16px;border-radius:4px;margin-right:4px;cursor:pointer;border:1px solid transparent}
@@ -634,14 +638,19 @@ canvas{max-height:280px}
 
 /* 明细表 */
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;color:var(--dim);font-weight:600;padding:9px 10px;border-bottom:1px solid var(--line);font-size:12px;white-space:nowrap}
-td{padding:10px;border-bottom:1px solid #1b1e27;vertical-align:top}
+th{text-align:left;color:var(--dim);font-weight:600;padding:9px 10px;border-bottom:1px solid var(--line);font-size:11px;white-space:nowrap;letter-spacing:.4px;text-transform:uppercase}
+td{padding:10px;border-bottom:1px solid #1b1e27;vertical-align:middle}
+tbody tr:nth-child(even) td{background:rgba(255,255,255,.012)}
 tr:hover td{background:#191d26}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+td.center,th.center{text-align:center}
+th.num,td.num{padding-right:14px}
 .cname{display:inline-block;cursor:pointer;padding:2px 8px;border-radius:5px;margin:1px 3px 1px 0;transition:.12s;border:1px solid transparent;font-size:12.5px}
 .cname:hover{background:var(--card2);border-color:var(--line)}
 .cname.sel,.mrow.sel td{background:rgba(59,130,246,.12)}
 .cname.sel{border-color:var(--info)}
 .sec{font-size:11px;color:var(--dim)}
+.cname .sec{margin-left:4px}
 .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
 .pill{padding:6px 13px;border-radius:999px;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:12.5px;color:var(--sub);user-select:none;transition:.15s}
 .pill:hover{border-color:var(--info);color:var(--txt)}
@@ -650,10 +659,28 @@ tr:hover td{background:#191d26}
 .search:focus{border-color:var(--info)}
 .footer{color:var(--dim);font-size:11px;text-align:center;margin-top:26px;line-height:1.8}
 .empty{color:var(--dim);text-align:center;padding:24px;font-size:13px}
+
+/* 质量门禁 */
+.gate{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.gate .g{flex:1;min-width:200px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.gate .g .gname{font-size:12px;color:var(--sub);font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.gate .g .gval{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums}
+.gate .g .gthr{font-size:11px;color:var(--dim);margin-top:3px}
+.gate .g.ok{border-color:rgba(34,197,94,.35)}
+.gate .g.bad{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.04)}
+.gate .g.ok .gval{color:var(--ok)}
+.gate .g.bad .gval{color:var(--bad)}
+.gate .g.ok .gname::before{content:'✓';color:var(--ok)}
+.gate .g.bad .gname::before{content:'✕';color:var(--bad)}
+/* 口径说明 */
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--dim);margin-top:2px;margin-bottom:16px;line-height:1.6}
+.legend b{color:var(--sub);font-weight:600}
 </style></head><body><div class="wrap">
 
 <div class="verdict" id="verdict"></div>
 <div class="kpis" id="kpis"></div>
+<div class="gate" id="gate"></div>
+<div class="legend" id="legend"></div>
 
 <div id="defects-section"></div>
 
@@ -679,7 +706,7 @@ tr:hover td{background:#191d26}
     <span class="pill" data-f="fail">失败过的</span>
     <input class="search" id="q" placeholder="搜索用例&#8230;">
   </div>
-  <table><thead><tr><th>运行#</th><th>时间</th><th>结果</th><th>通过率</th><th>耗时</th><th>用例明细</th></tr></thead><tbody id="tbl"></tbody></table>
+  <table><thead><tr><th class="center">运行#</th><th>时间</th><th class="center">结果</th><th class="num">通过率</th><th class="num">耗时</th><th>用例明细</th></tr></thead><tbody id="tbl"></tbody></table>
 </div>
 
 <div class="footer">数据源 history.json · 每次跑 Appium 回归自动追加 · SLA 阈值：单用例 120s / 全量 20min · 点用例名下钻历史耗时</div>
@@ -806,14 +833,13 @@ function defects(){
   const sec = cnv('defects-section');
   if(!defs.length){ sec.innerHTML=''; return; }
   sec.innerHTML = '<div class="card" style="margin-bottom:14px"><h2><span class="hico">🐛</span>缺陷清单 <span class="badge">'+defs.length+' 个</span></h2><div class="meta">当前仍未通过、需要修复或排查的用例</div>'+
-    defs.map(d=>{
+    defs.map((d,i)=>{
       const desc = d.lastStatus==='ERROR'
         ? '执行期间抛异常（定位器失效 / 环境异常），非断言失败，需先确认环境与元素定位。'
         : '断言未通过，页面状态与预期不符。建议结合截图核对实际 UI。';
       return '<div class="defect">'+
-        '<div class="df-head"><span class="df-name">'+title(d.n)+'</span>'+d.tags+'</div>'+
+        '<div class="df-head"><span class="df-idx">'+(i+1)+'</span><span class="df-name">'+title(d.n)+'</span>'+d.tags+'<span class="df-stats">失败 '+d.failCount+' 次 · 均值 '+Math.round(d.avgT)+'s</span></div>'+
         '<div class="df-desc">'+desc+'</div>'+
-        '<div class="df-trace">历史失败 '+d.failCount+' 次 · 平均耗时 '+Math.round(d.avgT)+'s</div>'+
         '</div>';
     }).join('')+'</div>';
 }
@@ -822,6 +848,35 @@ function defects(){
 const TIP = {backgroundColor:'rgba(21,24,32,.95)',borderColor:'#262b36',borderWidth:1,titleColor:'#e8eaef',bodyColor:'#9aa3b2',padding:10,cornerRadius:8,displayColors:false};
 const GRID = {color:'rgba(38,43,54,.6)'};
 const grad = (ctx,area,rgb)=>{ const g=ctx.createLinearGradient(0,area.top,0,area.bottom); g.addColorStop(0,`rgba(${rgb},.32)`); g.addColorStop(1,`rgba(${rgb},.02)`); return g; };
+
+/* 质量门禁：大厂发布判定标准 */
+function gate(){
+  const last = H[H.length-1];
+  const total = H.reduce((a,r)=>a+r.total,0);
+  const passed = H.reduce((a,r)=>a+r.passed,0);
+  const rate = total? passed/total : 0;
+  const names = uniq();
+  const flaky = names.filter(isFlaky).length;
+  const reg = lastFailedAnyNewRegression();
+  const items = [
+    {name:'本次通过率', val:last.total? (last.passed/last.total*100).toFixed(1)+'%':'—', thr:'阈值 ≥ 100%（0 失败）', ok:last.failed===0},
+    {name:'累计通过率', val:(rate*100).toFixed(1)+'%', thr:'阈值 ≥ 95%', ok:rate>=0.95},
+    {name:'不稳定用例', val:flaky+' 个', thr:'阈值 = 0（无 Flaky）', ok:flaky===0},
+    {name:'回归缺陷', val:reg+' 条', thr:'阈值 = 0（无回归）', ok:reg===0},
+    {name:'全量耗时', val:_fmt(last.elapsed), thr:'SLA ≤ 20min', ok:last.elapsed<=SLA_TOTAL},
+  ];
+  cnv('gate').innerHTML = items.map(g=>
+    '<div class="g '+(g.ok?'ok':'bad')+'"><div class="gname">'+g.name+'</div><div class="gval">'+g.val+'</div><div class="gthr">'+g.thr+'</div></div>'
+  ).join('');
+}
+/* 指标口径说明 */
+function legend(){
+  cnv('legend').innerHTML =
+    '<span><b>首次通过率(FPR)</b> 所有用例在历史首次运行时即通过的比例</span>'+
+    '<span><b>不稳定(Flaky)</b> 同一用例历史结果在 通过↔失败 间波动</span>'+
+    '<span><b>回归(Regression)</b> 此前通过、本次失败的用例</span>'+
+    '<span><b>SLA</b> 单用例 120s / 全量 20min 的质量红线</span>';
+}
 
 /* 通过率趋势（带基线） */
 function drawRate(){
@@ -925,14 +980,14 @@ function drawTable(){
     const runNo = H.length - idx;
     const rate = r.total? (r.passed/r.total*100).toFixed(0):0;
     const row=document.createElement('tr');
-    row.innerHTML = '<td style="color:var(--dim);font-variant-numeric:tabular-nums">#'+runNo+'</td>'+
-      '<td style="white-space:nowrap">'+r.ts+'</td>'+
-      '<td>'+(r.failed===0
+    row.innerHTML = '<td class="center" style="color:var(--dim);font-variant-numeric:tabular-nums">#'+runNo+'</td>'+
+      '<td style="white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--sub)">'+r.ts+'</td>'+
+      '<td class="center">'+(r.failed===0
         ?'<span style="color:'+C.ok+';font-weight:700">'+r.passed+'/'+r.total+' 全过</span>'
         :'<span style="color:'+C.bad+';font-weight:700">'+r.passed+'/'+r.total+' · '+r.failed+' 失败</span>')+'</td>'+
-      '<td style="font-variant-numeric:tabular-nums;color:'+(rate<100?C.warn:C.txt)+'">'+rate+'%</td>'+
-      '<td style="white-space:nowrap;font-variant-numeric:tabular-nums;color:'+(r.elapsed>SLA_TOTAL?C.bad:'' )+'">'+_fmt(r.elapsed)+'</td>'+
-      '<td>'+r.cases.map(c=>'<span class="cname" data-name="'+c.name+'"><span class="dot" style="background:'+stColor(c.status)+'"></span>'+title(c.name)+' <span class="sec">'+Math.round(c.time)+'s</span></span>').join('')+'</td>';
+      '<td class="num" style="color:'+(rate<100?C.warn:'')+'">'+rate+'%</td>'+
+      '<td class="num" style="color:'+(r.elapsed>SLA_TOTAL?C.bad:'')+'">'+_fmt(r.elapsed)+'</td>'+
+      '<td>'+r.cases.map(c=>'<span class="cname" data-name="'+c.name+'"><span class="dot" style="background:'+stColor(c.status)+'"></span>'+title(c.name)+'<span class="sec">'+Math.round(c.time)+'s</span></span>').join('')+'</td>';
     tb.appendChild(row);
   });
 }
@@ -953,7 +1008,7 @@ document.querySelectorAll('.pill').forEach(p=>p.onclick=()=>{
 cnv('q').addEventListener('input',e=>{searchText=e.target.value;drawTable();});
 cnv('tbl').addEventListener('click',e=>{const c=e.target.closest('.cname'); if(c) selectCase(c.dataset.name);});
 
-verdict(); kpis(); defects(); matrix(); drawRate(); drawTime(); drawFail(); drawSlow(); drawCase(); drawTable();
+verdict(); kpis(); gate(); legend(); defects(); matrix(); drawRate(); drawTime(); drawFail(); drawSlow(); drawCase(); drawTable();
 </script></body></html>"""
 
 
